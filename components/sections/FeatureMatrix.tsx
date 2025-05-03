@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Check, Users, Store } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
@@ -24,6 +24,22 @@ const FeatureMatrix = () => {
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
   const { ref: cardsRef, isVisible: cardsVisible } = useScrollAnimation();
   const [activeTab, setActiveTab] = useState<'shoppers' | 'vendors'>('shoppers');
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    // Initial check
+    checkMobile();
+    
+    // Add event listener for window resize
+    window.addEventListener('resize', checkMobile);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   return (
     <section id="features" className="section bg-grayLight relative overflow-hidden">
@@ -77,7 +93,7 @@ const FeatureMatrix = () => {
         >
           {/* Shoppers Card */}
           <div className={`bg-white rounded-xl shadow-lg p-8 ${
-            activeTab === 'shoppers' || window.innerWidth >= 768 ? 'block' : 'hidden md:block'
+            activeTab === 'shoppers' || !isMobile ? 'block' : 'hidden md:block'
           }`}>
             <div className="mb-8">
               <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full mb-6">
@@ -104,7 +120,7 @@ const FeatureMatrix = () => {
 
           {/* Vendors Card */}
           <div className={`bg-white rounded-xl shadow-lg p-8 ${
-            activeTab === 'vendors' || window.innerWidth >= 768 ? 'block' : 'hidden md:block'
+            activeTab === 'vendors' || !isMobile ? 'block' : 'hidden md:block'
           }`}>
             <div className="mb-8">
               <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full mb-6">
