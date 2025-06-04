@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 import { Send } from 'lucide-react';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
@@ -12,7 +12,7 @@ const Newsletter = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { ref: containerRef, isVisible: containerVisible } = useScrollAnimation();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
 
