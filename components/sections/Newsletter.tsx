@@ -2,7 +2,9 @@
 
 import { useState } from 'react';
 import { Send } from 'lucide-react';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { db } from '@/lib/firebase';
 
 const Newsletter = () => {
   const [email, setEmail] = useState('');
@@ -10,15 +12,21 @@ const Newsletter = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { ref: containerRef, isVisible: containerVisible } = useScrollAnimation();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
+
+    try {
+      await addDoc(collection(db, 'newsletter'), {
+        email,
+        createdAt: serverTimestamp(),
+      });
       setIsSubscribed(true);
+    } catch (error) {
+      console.error('Failed to subscribe:', error);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   return (
